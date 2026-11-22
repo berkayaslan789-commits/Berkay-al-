@@ -1,0 +1,11 @@
+{
+  "name": "Remix VoxaLingua",
+  "description": "Görüntülü sohbet, gerçek zamanlı çok dilli sesli çeviri, Omegle tarzı rastgele eşleşme, TikTok tarzı canlı yayın akışı ve sesli komut platformu.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

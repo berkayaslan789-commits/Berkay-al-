@@ -1,0 +1,357 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public social profile for a registered platform user (contains no PII).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 2, "maxLength": 50 },
+        "handle": { "type": "string", "minLength": 2, "maxLength": 32, "pattern": "^[a-z0-9_]+$" },
+        "avatarUrl": { "type": "string", "maxLength": 512 },
+        "nativeLang": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "bio": { "type": "string", "maxLength": 240 },
+        "status": { "type": "string", "enum": ["active", "muted", "banned"] },
+        "followersCount": { "type": "number" },
+        "followingCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "handle",
+        "nativeLang",
+        "status",
+        "followersCount",
+        "followingCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Private PII document isolated from public user profiles.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 160 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Role assignment record for platform moderators and admins.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 160 },
+        "role": { "type": "string", "enum": ["super_admin", "moderator"] },
+        "grantedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "grantedBy", "createdAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "Global platform configuration controlled exclusively by owner/admins.",
+      "type": "object",
+      "properties": {
+        "announcement": { "type": "string", "maxLength": 240 },
+        "maintenanceMode": { "type": "boolean" },
+        "autoTranslateVoice": { "type": "boolean" },
+        "allowRandomMatch": { "type": "boolean" },
+        "updatedBy": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "announcement",
+        "maintenanceMode",
+        "autoTranslateVoice",
+        "allowRandomMatch",
+        "updatedBy",
+        "updatedAt"
+      ]
+    },
+    "LiveStream": {
+      "title": "LiveStream",
+      "description": "TikTok-style live video room or social broadcast session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "hostUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "hostName": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "hostHandle": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "hostLang": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "topic": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "roomCode": { "type": "string", "minLength": 3, "maxLength": 24 },
+        "isLive": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "likesCount": { "type": "number" },
+        "viewerCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "hostUid",
+        "hostName",
+        "hostHandle",
+        "hostLang",
+        "title",
+        "topic",
+        "roomCode",
+        "isLive",
+        "featured",
+        "likesCount",
+        "viewerCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StreamComment": {
+      "title": "StreamComment",
+      "description": "Auto-translated live chat comment inside a stream.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "streamId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "sourceLang": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "originalText": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "translatedText": { "type": "string", "maxLength": 500 },
+        "targetLang": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "streamId",
+        "authorUid",
+        "authorName",
+        "sourceLang",
+        "originalText",
+        "translatedText",
+        "targetLang",
+        "createdAt"
+      ]
+    },
+    "FollowEdge": {
+      "title": "FollowEdge",
+      "description": "Social follow relationship between two users.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 260, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "followerUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "followerUid", "targetUid", "createdAt"]
+    },
+    "ModerationReport": {
+      "title": "ModerationReport",
+      "description": "User or stream moderation report reviewed by platform owner/admins.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "reporterUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "targetName": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "reason": { "type": "string", "minLength": 3, "maxLength": 300 },
+        "status": { "type": "string", "enum": ["open", "resolved", "dismissed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "reporterUid",
+        "targetUid",
+        "targetName",
+        "reason",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "VideoPost": {
+      "title": "VideoPost",
+      "description": "Uploaded or linked community video with AI-generated multi-language captions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 50 },
+        "authorHandle": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "sourceLang": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "topic": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "videoUrl": { "type": "string", "minLength": 5, "maxLength": 512 },
+        "mimeType": { "type": "string", "minLength": 5, "maxLength": 40 },
+        "transcriptOriginal": { "type": "string", "maxLength": 3000 },
+        "cues": { "type": "array" },
+        "translations": { "type": "object" },
+        "likesCount": { "type": "number" },
+        "viewsCount": { "type": "number" },
+        "isPublished": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "authorUid",
+        "authorName",
+        "authorHandle",
+        "sourceLang",
+        "title",
+        "topic",
+        "videoUrl",
+        "mimeType",
+        "transcriptOriginal",
+        "cues",
+        "translations",
+        "likesCount",
+        "viewsCount",
+        "isPublished",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdPolicy": {
+      "title": "AdPolicy",
+      "description": "Global advertising terms, pricing, and prohibited content guidelines controlled by platform owner.",
+      "type": "object",
+      "properties": {
+        "isAcceptingAds": { "type": "boolean" },
+        "currency": { "type": "string", "enum": ["TRY", "USD", "EUR"] },
+        "dailyRateBanner": { "type": "number" },
+        "dailyRateVideoCard": { "type": "number" },
+        "minDurationDays": { "type": "number" },
+        "prohibitedContent": { "type": "string", "minLength": 10, "maxLength": 800 },
+        "termsText": { "type": "string", "minLength": 20, "maxLength": 2500 },
+        "paymentInstructions": { "type": "string", "minLength": 5, "maxLength": 500 },
+        "updatedBy": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "isAcceptingAds",
+        "currency",
+        "dailyRateBanner",
+        "dailyRateVideoCard",
+        "minDurationDays",
+        "prohibitedContent",
+        "termsText",
+        "paymentInstructions",
+        "updatedBy",
+        "updatedAt"
+      ]
+    },
+    "AdCampaign": {
+      "title": "AdCampaign",
+      "description": "Public sponsorship/ad creative submitted by advertisers and approved by platform owner.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "advertiserUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "brandName": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "headline": { "type": "string", "minLength": 3, "maxLength": 100 },
+        "description": { "type": "string", "minLength": 5, "maxLength": 240 },
+        "targetUrl": { "type": "string", "minLength": 10, "maxLength": 512, "pattern": "^https://" },
+        "imageUrl": { "type": "string", "maxLength": 512 },
+        "placement": { "type": "string", "enum": ["banner_top", "feed_card", "video_sponsor"] },
+        "durationDays": { "type": "number" },
+        "totalPrice": { "type": "number" },
+        "currency": { "type": "string", "enum": ["TRY", "USD", "EUR"] },
+        "termsAccepted": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["pending", "approved", "paused", "rejected"] },
+        "impressions": { "type": "number" },
+        "clicks": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "advertiserUid",
+        "brandName",
+        "headline",
+        "description",
+        "targetUrl",
+        "placement",
+        "durationDays",
+        "totalPrice",
+        "currency",
+        "termsAccepted",
+        "status",
+        "impressions",
+        "clicks",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdCampaignBilling": {
+      "title": "AdCampaignBilling",
+      "description": "Isolated advertiser contact email and payment reference note readable only by owner/admins and the advertiser.",
+      "type": "object",
+      "properties": {
+        "adId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "advertiserUid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "contactEmail": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "paymentNote": { "type": "string", "maxLength": 240 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["adId", "advertiserUid", "contactEmail", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public user profiles for social discovery, handles, and language tags."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Isolated PII storage containing user email, readable only by owner or admins."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Admin and moderator role assignments controlled by the platform owner."
+    },
+    "/platformSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Global platform controls and announcement banner."
+    },
+    "/streams/{streamId}": {
+      "schema": { "$ref": "#/entities/LiveStream" },
+      "description": "Live video broadcast rooms and community feed sessions."
+    },
+    "/streams/{streamId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/StreamComment" },
+      "description": "Real-time translated chat comments inside live streams."
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/FollowEdge" },
+      "description": "Follower/following relationships."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ModerationReport" },
+      "description": "Moderation reports submitted by users for owner/admin review."
+    },
+    "/videos/{videoId}": {
+      "schema": { "$ref": "#/entities/VideoPost" },
+      "description": "User-uploaded videos with AI multi-language subtitles and viewer translations."
+    },
+    "/adPolicies/{policyId}": {
+      "schema": { "$ref": "#/entities/AdPolicy" },
+      "description": "Platform advertising terms, prohibited rules, and pricing rates."
+    },
+    "/adCampaigns/{adId}": {
+      "schema": { "$ref": "#/entities/AdCampaign" },
+      "description": "Publicly visible sponsored ad campaigns once approved by the platform owner."
+    },
+    "/adCampaigns/{adId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/AdCampaignBilling" },
+      "description": "Private advertiser contact email and billing reference note."
+    }
+  }
+}
