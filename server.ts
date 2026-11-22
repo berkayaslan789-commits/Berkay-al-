@@ -1304,10 +1304,16 @@ Always return cleanText (the spoken text with proper punctuation), translatedTex
     );
   });
 
+  const httpServer = http.createServer(app);
+
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        allowedHosts: true,
+        ws: { server: httpServer },
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -1319,7 +1325,6 @@ Always return cleanText (the spoken text with proper punctuation), translatedTex
     });
   }
 
-  const httpServer = http.createServer(app);
   const wssLiveTranslate = new WebSocketServer({ noServer: true, maxPayload: 512 * 1024 });
   const wssLiveTranscribe = new WebSocketServer({ noServer: true, maxPayload: 512 * 1024 });
   const wssRoom = new WebSocketServer({ noServer: true, maxPayload: 2 * 1024 * 1024 });
@@ -1342,6 +1347,13 @@ Always return cleanText (the spoken text with proper punctuation), translatedTex
   };
 
   httpServer.on('upgrade', (request, socket, head) => {
+    const protocol = request.headers['sec-websocket-protocol'];
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      (protocol === 'vite-hmr' || protocol === 'vite-ping')
+    ) {
+      return;
+    }
     const reqUrl = new URL(request.url || '/', `http://${request.headers.host || 'localhost'}`);
     const ip = getClientIp(request);
     if (reqUrl.pathname === '/ws/live-translate') {
